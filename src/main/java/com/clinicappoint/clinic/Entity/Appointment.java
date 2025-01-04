@@ -30,6 +30,7 @@ public class Appointment {
     private int minuteindex;
     private Date cashDate;
     private String date;
+    private String instruction;
 
 
     // 无参数构造函数

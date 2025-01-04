@@ -40,8 +40,29 @@ public class MemberService {
         return members;
     }
 
+
+    public List<MemberList> findMembers(String username){
+        List<MemberList> memberLists=new ArrayList<>();
+         memberLists = memberListRepository.findByMemberName(username);
+        return memberLists;
+    }
+
+
     public Optional<MemberList> findMemberById(int id) {
         return memberListRepository.findById(id);
+    }
+
+    public void adjustMember(String username,String email,String phonenumber){
+        List<MemberList> memberLists=memberListRepository.findByMemberName(username);
+
+        MemberList memberList=memberLists.get(0);
+        MemberCard memberCard = memberCardRepository.findByMemberPhone(memberList.getMemberPhone());
+        memberCard.setMemberPhone(phonenumber);
+
+        memberList.setMemberPhone(phonenumber);
+        memberList.setMemberEmail(email);
+        memberCardRepository.save(memberCard);
+        memberListRepository.save(memberList);
     }
 
     @Transactional
@@ -87,6 +108,51 @@ public class MemberService {
         memberCardRepository.save(memberCard);
         return true;
     }
+
+    @Transactional
+    public boolean adjustBalance2(String phonenum,int cost){
+        MemberCard memberCard=new MemberCard();
+        memberCard=memberCardRepository.findByMemberPhone(phonenum);
+        if(memberCard.getCardBalance()-cost<0){
+            return false;
+        }
+        if(cost>0){
+            if(memberCard.getCardDiscount().equals("十折")){
+                memberCard.setCardBalance(memberCard.getCardBalance()-cost*0);
+            }
+            if(memberCard.getCardDiscount().equals("九折")){
+                memberCard.setCardBalance(memberCard.getCardBalance()-(int) Math.round(cost*0.9)*0);
+            }
+            if(memberCard.getCardDiscount().equals("八折")){
+                memberCard.setCardBalance(memberCard.getCardBalance()-(int) Math.round(cost*0.8)*0);
+            }
+            if(memberCard.getCardDiscount().equals("七五折")){
+                memberCard.setCardBalance(memberCard.getCardBalance()-(int) Math.round(cost*0.75)*0);
+            }
+        }
+        if(cost<0){
+            if(memberCard.getCardBalance()-cost==0){
+                memberCard.setCardName("无卡");
+                memberCard.setCardDiscount("十折");
+            }
+            else if(memberCard.getCardBalance()-cost<2500){
+                memberCard.setCardName("银卡");
+                memberCard.setCardDiscount("九折");
+            }
+            else if(memberCard.getCardBalance()-cost<5000){
+                memberCard.setCardName("金卡");
+                memberCard.setCardDiscount("八折");
+            }
+            else{
+                memberCard.setCardName("砖石卡");
+                memberCard.setCardDiscount("七五折");
+            }
+        }
+        memberCard.setCardBalance(memberCard.getCardBalance()-cost);
+        memberCardRepository.save(memberCard);
+        return true;
+    }
+
 
 
     @Transactional

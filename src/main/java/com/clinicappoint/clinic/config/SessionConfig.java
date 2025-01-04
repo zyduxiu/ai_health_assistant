@@ -15,6 +15,6 @@ public class SessionConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login","/checksession","/signup","/checkadmin","/api/doctors");
+                .excludePathPatterns("/login", "/checksession", "/signup", "/checkadmin", "/api/doctors");
     }
 }

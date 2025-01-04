@@ -50,6 +50,16 @@ public class MemberCardController {
         }
     }
 
+    @PostMapping("/adjustbalance2")
+    public ResponseEntity<String> adjustBalance2(@RequestBody adjust pd){
+        if(memberService.adjustBalance2(pd.getMemberPhone(),pd.getCost())){
+            return ResponseEntity.ok("success");
+        }
+        else{
+            return ResponseEntity.badRequest().body("fu");
+        }
+    }
+
 
     @Data
     static class adjust{

@@ -14,7 +14,9 @@ public interface AppointmentTableService {
 
     public void deleteAppointment(String date,String doctorName,int Hourindex,int Minuteindex);
     public List<Appointment> mergeAppointment(List<Appointment> appointmentList);
-
+    public void updateInstruction(int Starthourindex, int Endhourindex, int StartMinuteindex, int EndMinuteindex, String date, String doctor,String instruction);
     public void updateload(int Starthourindex,int Endhourindex,int StartMinuteindex,int EndMinuteindex,String date,String doctor);
+
+    public void updateClinic(int Starthourindex, int Endhourindex, int StartMinuteindex, int EndMinuteindex, String date, String doctor,String instruction);
 }
 

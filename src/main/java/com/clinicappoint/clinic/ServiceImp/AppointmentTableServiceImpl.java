@@ -130,5 +130,37 @@ public class AppointmentTableServiceImpl implements AppointmentTableService {
         }
     }
 
+    @Override
+    public void updateInstruction(int Starthourindex, int Endhourindex, int StartMinuteindex, int EndMinuteindex, String date, String doctor,String instruction) {
+        List<Appointment> update = appointmentRepository.findAll();
+        List<Appointment> result = new ArrayList<>();
+        for (Appointment appointment : update) {
+            if (((appointment.getAppointmentStartHourindex()> Starthourindex) || (appointment.getAppointmentStartHourindex() == Starthourindex) &&
+                    (appointment.getAppointmentStartMinutesindex() >= StartMinuteindex)) &&
+                    ((appointment.getAppointmentEndHourindex() < Endhourindex) || (appointment.getAppointmentEndHourindex() ==
+                            Endhourindex) && (appointment.getAppointmentEndMinutesindex() <= EndMinuteindex))){
+                appointment.setInstruction(instruction);
+                appointmentRepository.save(appointment);
+            }
+        }
+    }
+
+
+    @Override
+    public void updateClinic(int Starthourindex, int Endhourindex, int StartMinuteindex, int EndMinuteindex, String date, String doctor,String instruction) {
+        List<Appointment> update = appointmentRepository.findAll();
+        List<Appointment> result = new ArrayList<>();
+        for (Appointment appointment : update) {
+            if (((appointment.getAppointmentStartHourindex()> Starthourindex) || (appointment.getAppointmentStartHourindex() == Starthourindex) &&
+                    (appointment.getAppointmentStartMinutesindex() >= StartMinuteindex)) &&
+                    ((appointment.getAppointmentEndHourindex() < Endhourindex) || (appointment.getAppointmentEndHourindex() ==
+                            Endhourindex) && (appointment.getAppointmentEndMinutesindex() <= EndMinuteindex))){
+                appointment.setInstruction(instruction);
+                appointment.setAttribute("已诊");
+                appointmentRepository.save(appointment);
+            }
+        }
+    }
+
 
 }

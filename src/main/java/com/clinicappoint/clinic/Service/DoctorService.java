@@ -8,6 +8,7 @@ import java.util.List;
 public interface DoctorService {
     public List<DoctorEntity> getallDoctors();
 
+    public List<DoctorEntity> getOneDoctors(String name);
     public void alterDoctor(
             String fullname,
             String specialization,

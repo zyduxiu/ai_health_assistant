@@ -2,6 +2,8 @@ package com.clinicappoint.clinic.Controller;
 
 import com.clinicappoint.clinic.Entity.DoctorEntity;
 import com.clinicappoint.clinic.Service.DoctorService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,15 @@ public class DoctorController {
     @GetMapping("/getDoctor")
     public List<DoctorEntity> getDoctors(){
         return  doctorService.getallDoctors();
+    }
+
+    @CrossOrigin
+    @GetMapping("/getOneDoctor")
+    public List<DoctorEntity> getOneDoctors(HttpServletRequest request){
+        HttpSession session=request.getSession(false);
+        Object userName=session.getAttribute("userName");
+        String username=userName.toString();
+        return  doctorService.getOneDoctors(username);
     }
 
     @CrossOrigin

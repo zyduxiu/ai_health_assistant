@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public interface UserAuthService {
     public UserAuth getLogininformation(String username,String password);
 
-    public boolean Signup(String username,String password,String email);
+    public boolean Signup(String username,String password,String email,String phoneNumber);
 
     public boolean updateAccountName(int id,String username);
 

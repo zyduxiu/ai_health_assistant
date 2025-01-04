@@ -6,6 +6,7 @@ import com.clinicappoint.clinic.Service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 @Service
@@ -15,7 +16,13 @@ public class DoctorServiceImp implements DoctorService {
     public List<DoctorEntity> getallDoctors(){
         return doctorRepository.getAll();
     }
-
+    @Override
+    public List<DoctorEntity> getOneDoctors(String name){
+        List<DoctorEntity> doctorEntities=new ArrayList<>();
+        DoctorEntity doctorEntity = doctorRepository.getDoctorEntityByName(name);
+        doctorEntities.add(doctorEntity);
+        return doctorEntities;
+    }
     public void alterDoctor(
             String fullname,
             String specialization,

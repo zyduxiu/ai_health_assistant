@@ -3,6 +3,8 @@ package com.clinicappoint.clinic.Controller;
 import com.clinicappoint.clinic.Entity.Appointment;
 import com.clinicappoint.clinic.Repository.AppointmentRepository;
 import com.clinicappoint.clinic.Service.AppointmentTableService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,23 @@ public class getAppointment {
                 pd.getEndMinuteindex(),pd.getDate(),pd.getDoctor());
         return ResponseEntity.ok("yes");
     }
+
+    @CrossOrigin
+    @PostMapping("/updateInstruction")
+    public ResponseEntity<String> updateInstruction(@RequestBody timerange pd){
+        appointmentTableService.updateInstruction(pd.getStartHourindex(),pd.getEndHourindex(),pd.getStartMinuteindex(),
+                pd.getEndMinuteindex(),pd.getDate(),pd.getDoctor(),pd.getInstruction());
+        return ResponseEntity.ok("yes");
+    }
+
+    @CrossOrigin
+    @PostMapping("/updateClinic")
+    public ResponseEntity<String> updateClinic(@RequestBody timerange pd){
+        appointmentTableService.updateClinic(pd.getStartHourindex(),pd.getEndHourindex(),pd.getStartMinuteindex(),
+                pd.getEndMinuteindex(),pd.getDate(),pd.getDoctor(),pd.getInstruction());
+        return ResponseEntity.ok("yes");
+    }
+
 
     @CrossOrigin
     @GetMapping("/getAllAppointments")
@@ -78,6 +97,78 @@ public class getAppointment {
         return allpaid;
     }
 
+
+    @CrossOrigin
+    @GetMapping("/api/allpaid/doctor")
+    public List<Appointment> getAllAppointments(HttpServletRequest request) {
+        HttpSession session=request.getSession(false);
+        Object userName=session.getAttribute("userName");
+        String username=userName.toString();
+        List<Appointment> paid=appointmentRepository.findByAttribute("已付费");
+        List<Appointment> unpaid = appointmentRepository.findByAttribute("已诊");
+        List<Appointment> uncheck = appointmentRepository.findByAttribute("已预约");
+        List<Appointment> allpaid=new ArrayList<>();
+        for(Appointment appointment:paid){
+            if(appointment.getDoctor().equals(username)) {
+                allpaid.add(appointment);
+            }
+        }
+        for(Appointment appointment:unpaid){
+            if(appointment.getDoctor().equals(username)) {
+                allpaid.add(appointment);
+            }
+        }
+        for(Appointment appointment:uncheck){
+            if(appointment.getDoctor().equals(username)) {
+                allpaid.add(appointment);
+            }
+        }
+        System.out.println("Query Result: " + allpaid);  // 打印查询结果
+        if (allpaid.isEmpty()) {
+            System.out.println("No unpaid appointments found.");
+        } else {
+            System.out.println("Unpaid appointments found: " + allpaid.size());
+        }
+        allpaid=appointmentTableService.mergeAppointment(allpaid);
+        return allpaid;
+    }
+
+
+    @CrossOrigin
+    @GetMapping("/api/allpaid/member")
+    public List<Appointment> getAllMemberAppointments(HttpServletRequest request) {
+        HttpSession session=request.getSession(false);
+        Object userName=session.getAttribute("userName");
+        String username=userName.toString();
+        List<Appointment> paid=appointmentRepository.findByAttribute("已付费");
+        List<Appointment> unpaid = appointmentRepository.findByAttribute("已诊");
+        List<Appointment> uncheck = appointmentRepository.findByAttribute("已预约");
+        List<Appointment> allpaid=new ArrayList<>();
+        for(Appointment appointment:paid){
+            if(appointment.getName().equals(username)) {
+                allpaid.add(appointment);
+            }
+        }
+        for(Appointment appointment:unpaid){
+            if(appointment.getName().equals(username)) {
+                allpaid.add(appointment);
+            }
+        }
+        for(Appointment appointment:uncheck){
+            if(appointment.getName().equals(username)) {
+                allpaid.add(appointment);
+            }
+        }
+        System.out.println("Query Result: " + allpaid);  // 打印查询结果
+        if (allpaid.isEmpty()) {
+            System.out.println("No unpaid appointments found.");
+        } else {
+            System.out.println("Unpaid appointments found: " + allpaid.size());
+        }
+        allpaid=appointmentTableService.mergeAppointment(allpaid);
+        return allpaid;
+    }
+
     @CrossOrigin
     @PostMapping("/updatePaymentStatus")
     public ResponseEntity<String> updatePaymentStatus(@RequestParam int appointmentKey, @RequestParam String status) {
@@ -98,6 +189,7 @@ public class getAppointment {
         int endMinuteindex;
         String date;
         String doctor;
+        String instruction;
     }
 
 }

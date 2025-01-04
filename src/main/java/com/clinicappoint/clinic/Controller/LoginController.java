@@ -33,7 +33,7 @@ public class LoginController {
     @CrossOrigin
     @PostMapping("/addaccount")
     public ResponseEntity<String> addAccount(@RequestBody signupbody pd){
-        if(userAuthService.Signup(pd.getUsername(),pd.getPassword(),pd.getEmail())){
+        if(userAuthService.Signup(pd.getUsername(),pd.getPassword(),pd.getEmail(),pd.getPhoneNumber())){
             return ResponseEntity.ok("Success");
         }
         else{
@@ -45,7 +45,7 @@ public class LoginController {
     @CrossOrigin
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody signupbody pd){
-        if(userAuthService.Signup(pd.getUsername(),pd.getPassword(),pd.getEmail())){
+        if(userAuthService.Signup(pd.getUsername(),pd.getPassword(),pd.getEmail(),pd.getPhoneNumber())){
             return ResponseEntity.ok("Success");
         }
         else{
@@ -62,5 +62,6 @@ public class LoginController {
         String username;
         String password;
         String email;
+        String phoneNumber;
     }
 }

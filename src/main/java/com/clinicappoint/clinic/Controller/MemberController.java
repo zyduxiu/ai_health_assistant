@@ -4,6 +4,9 @@ import com.clinicappoint.clinic.Entity.MemberCard;
 import com.clinicappoint.clinic.Entity.VisitRecords;
 import com.clinicappoint.clinic.Repository.MemberCardRepository;
 import com.clinicappoint.clinic.Repository.MemberListRepository;
+import com.clinicappoint.clinic.Util.SessionUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +44,21 @@ public class MemberController {
     @GetMapping
     public List<MemberList> getAllMembers() {
         return memberService.findAllMembers();
+    }
+
+    @GetMapping("/member")
+    public List<MemberList> getAllMember(HttpServletRequest request) {
+        HttpSession session=request.getSession(false);
+        Object userName=session.getAttribute("userName");
+        String username=userName.toString();
+        return memberService.findMembers(username);
+    }
+
+
+    @PostMapping("/changeMember")
+    public ResponseEntity<String> changeMember(@RequestBody changeMember pd){
+        memberService.adjustMember(pd.username,pd.email,pd.phonenumber);
+        return ResponseEntity.ok("YES");
     }
 
     @GetMapping("/{id}")
@@ -130,7 +149,12 @@ public class MemberController {
         return memberListRepository.save(member);
     }
 
-
+    @Data
+    static class changeMember{
+        private String username;
+        private String email;
+        private String phonenumber;
+    }
 
 
 }
